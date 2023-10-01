@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page - Wireframe</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'rpg/styles.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<script>
+  // Function to show the notification popup
+  function showNotification() {
+    var notification = $("#notification-popup");
+    notification.fadeIn().delay(3000).fadeOut();
+  }
+
+  // Call this function when an incorrect login attempt occurs
+  // You can do this in your Django view after an incorrect login attempt
+  // For example:
+  // if login_failed:
+  //   showNotification();
+</script>
+<body>
+    {% block content %}
+    {% include 'registration/notification.html' %}
+    <h1>Login</h1>
+    {% if show_notification %}
+    <script>
+      showNotification();
+    </script>
+    {% endif %}
+    <script>
+console.log({{show_notification}});
+</script>
+
+    <form method="post" id="LoginForm">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+        <button type="submit">Login</button>
+    </form>
+    <footer><p>Don't have an account? <a href="{% url 'register' %}" class="signup-button">Sign Up</a></p></footer>
+
+    <section class="news">
+        <h2>Website News</h2>
+        <ul>
+            <li><strong>News Title 1:</strong> News content goes here.</li>
+            <li><strong>News Title 2:</strong> More news content here.</li>
+            <li><strong>News Title 1:</strong> News content goes here.</li>
+            <li><strong>News Title 2:</strong> More news content here.</li>
+            <li><strong>News Title 1:</strong> News content goes here.</li>
+            <li><strong>News Title 2:</strong> More news content here.</li>
+            <li><strong>News Title 1:</strong> News content goes here.</li>
+            <li><strong>News Title 2:</strong> More news content here.</li>
+            <li><strong>News Title 1:</strong> News content goes here.</li>
+            <li><strong>News Title 2:</strong> More news content here.</li>
+            <!-- Add more news items as needed -->
+        </ul>
+    </section>
+    {% endblock %}
+</body>
+</html>

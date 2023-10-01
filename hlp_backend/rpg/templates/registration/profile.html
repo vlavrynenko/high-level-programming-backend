@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'rpg/styles.css' %}">
+</head>
+<body>
+    <h1>Welcome to Your Profile, {{ username }}</h1>
+    <!-- Add user-specific content here -->
+    <p><a href="{% url 'login' %}" class="signup-button">Logout</a></p>
+</body>
+</html>
