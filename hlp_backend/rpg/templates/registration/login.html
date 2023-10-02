@@ -7,32 +7,21 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'rpg/styles.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'rpg/js/notification.js' %}"></script>
 </head>
-<script>
-  // Function to show the notification popup
-  function showNotification() {
-    var notification = $("#notification-popup");
-    notification.fadeIn().delay(3000).fadeOut();
-  }
-
-  // Call this function when an incorrect login attempt occurs
-  // You can do this in your Django view after an incorrect login attempt
-  // For example:
-  // if login_failed:
-  //   showNotification();
-</script>
 <body>
     {% block content %}
     {% include 'registration/notification.html' %}
     <h1>Login</h1>
-    {% if show_notification %}
-    <script>
-      showNotification();
-    </script>
+    {% if messages %}
+    <div class="error-message">
+        {% for message in messages %}
+        <script>
+            showNotification("{{ message }}");
+        </script>
+        {% endfor %}
+    </div>
     {% endif %}
-    <script>
-console.log({{show_notification}});
-</script>
 
     <form method="post" id="LoginForm">
         {% csrf_token %}

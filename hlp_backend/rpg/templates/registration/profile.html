@@ -8,7 +8,31 @@
 </head>
 <body>
     <h1>Welcome to Your Profile, {{ username }}</h1>
+    <!-- Add a form to display the list of user characters -->
+    <form method="post" id="CharacterListForm">
+        {% csrf_token %}
+        <h1>Your Characters</h1>
+        <ul>
+            {% for character in user_characters %}
+            <li>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit">{{ character.character_id.name }}</button>
+                </form>
+            </li>
+            {% empty %}
+            <li>No characters found.</li>
+            {% endfor %}
+        </ul>
+    </form>
+
+    <!-- Add a form for character creation -->
+        <form method="post" id="CharacterCreationForm" action="{% url 'create_character' %}">
+        {% csrf_token %}
+        <button type="submit">Create Character</button>
+    </form>
     <!-- Add user-specific content here -->
     <p><a href="{% url 'login' %}" class="signup-button">Logout</a></p>
+
 </body>
 </html>

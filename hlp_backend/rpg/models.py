@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your models here.
 class Location(models.Model):
@@ -46,18 +47,25 @@ class Skill(models.Model):
 
 class Equipment(models.Model):
     id = models.AutoField(primary_key=True)
-    helmet = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_helmets')
-    breastplate = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_breastplates')
-    leggings = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_leggings')
-    shoulders = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_shoulders')
-    bracers = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_bracers')
-    chainmail = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_chainmails')
-    boots = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_boots')
-    weapon_right = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_right_weapons')
-    weapon_left = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_left_weapons')
-    ring = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_rings')
-    amulet = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_amulets')
-    consumables = models.JSONField()
+    helmet = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_helmets', default=0)
+    breastplate = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_breastplates',
+                                    default=0)
+    leggings = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_leggings',
+                                 default=0)
+    shoulders = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_shoulders',
+                                  default=0)
+    bracers = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_bracers',
+                                default=0)
+    chainmail = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_chainmails',
+                                  default=0)
+    boots = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_boots', default=0)
+    weapon_right = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_right_weapons',
+                                     default=0)
+    weapon_left = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_left_weapons',
+                                    default=0)
+    ring = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_rings', default=0)
+    amulet = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_amulets', default=0)
+    consumables = models.JSONField(default='{}')
 
     def __str__(self):
         return self.id
@@ -108,17 +116,6 @@ class QuestStep(models.Model):
     quest_id = models.ForeignKey(Quest, on_delete=models.SET(0))
     description = models.CharField('quest step description')
     trigger = models.CharField('quest step trigger')
-
-    def __str__(self):
-        return self.id
-
-
-class User(models.Model):
-    id = models.AutoField(primary_key=True)
-    username = models.CharField('username')
-    email = models.EmailField()
-    password = models.CharField('password')
-    created_at = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return self.id
