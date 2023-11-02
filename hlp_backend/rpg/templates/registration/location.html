@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'rpg/styles/location/styles.css' %}">
+</head>
+<body>
+    <div class="header">
+        <div class="character-hp">
+            <progress id="hp-bar" value="{{ character.stats.current_health }}" max="{{ character.max_health }}"></progress>
+        </div>
+        <div class="nav-bar">
+            <div class="nav-button">
+                <img src="button1.png" alt="B1">
+            </div>
+            <div class="nav-button" id="nav-button2">
+                <img src="button2.png" alt="B2">
+            </div>
+            <div class="nav-button" id="nav-button3">
+                <img src="button3.png" alt="B3">
+            </div>
+            <div class="nav-button">
+                <img src="button4.png" alt="B4">
+            </div>
+            <div class="nav-button">
+                <img src="button5.png" alt="B5">
+            </div>
+            <div class="nav-button">
+                <img src="button6.png" alt="B6">
+            </div>
+            <div class="nav-button">
+                <img src="button7.png" alt="B7">
+            </div>
+            <div class="nav-button">
+                <img src="button8.png" alt="B8">
+            </div>
+        </div>
+        <p><a href="{% url 'login' %}" class="logout-button">Logout</a></p>
+    </div>
+
+    <div class="main-container">
+        <div class="location-container" style="background-image: url('{% static character.current_location.image %}');">
+            <!-- Location window content goes here -->
+            <div id="open-location-button-container">
+                <button id="open-location-button">Location</button>
+            </div>
+        </div>
+
+        <div id="open-chat-button-container">
+            <button id="open-chat-button">Open Chat</button>
+        </div>
+    </div>
+
+    <div id="chat-popup" class="chat-popup animated">
+        <div class="chat-content">
+            <!-- Chat content goes here -->
+            <div class="chat-messages">
+                <!-- Messages will appear here -->
+                <p>{{ character.name }}</p>
+                <p>{{ inventory }}</p>
+                <!-- Add more messages dynamically using JavaScript -->
+            </div>
+        </div>
+        <input type="text" id="message-input" placeholder="Type your message..." />
+        <button id="close-chat-button" class="chat-close">Close Chat</button>
+    </div>
+    <div id="npc-location-popup" class="popup">
+        <div class="popup-title-bar">
+            <span>NPCs and Nearest Locations</span>
+            <button id="close-location-button">Close</button>
+        </div>
+        <nav class="tree-nav" rel="stylesheet" href="{% static 'rpg/styles/location/styles_location_list.css' %}">
+
+            <details class="tree-nav__item is-expandable">
+              <summary class="tree-nav__item-title">Locations</summary>
+                {% for location in nearby_locations %}
+                    <form method="post" id="LoadLocation" action="{% url 'load_location' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="location_id" value="{{ location.id }}" />
+                        <button type="submit" class="tree-nav__item-title">{{ location.name }}</button>
+                    </form>
+
+                {% endfor %}
+            </details>
+            <details class="tree-nav__item is-expandable">
+              <summary class="tree-nav__item-title">NPC</summary>
+                {% for location in nearby_locations %}
+                    <summary class="tree-nav__item-title">
+                        {% for npc in location_npc %}
+                            {{ npc.name }} <br>
+                        {% endfor %}
+                    </summary>
+                {% endfor %}
+            </details>
+
+        </nav>
+    </div>
+    <div id="inventory-popup" class="popup">
+        <div class="popup-title-bar" id="inventory-popup-title">
+            <span>Inventory</span>
+            <button id="close-inventory-popup">Close</button>
+        </div>
+        <div class="popup-content">
+            <table>
+                <tbody>
+                    {% for item_id, item_data in inventory.items %}
+                    <tr>
+                        <details class="dropdown">
+                            <summary role="button">
+                                <td class="item-cell">
+                                    <img src={% static item_data.image%} alt="Item {{item_id}}" class="nav-button">
+                                    <div class="item-info">
+                                        <!-- Item info content -->
+                                        <p>{{item_data.stats.price}}</p>
+                                        <p>{{item_data.stats.damage}}</p>
+                                        {{ item_data }}
+                                    </div>
+                                </td>
+                            </summary>
+                            <ul>
+                                {% if item_data.type != 0 %}
+                                <form method="post" id="EquipItem" action="{% url 'equip' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="item_id" value="{{ item_id }}" />
+                                    <button type="submit" class="tree-nav__item-title">Equip</button>
+                                </form>
+                                {% endif %}
+                              <li><a href="#">In Pure CSS</a></li>
+                          </ul>
+                        </details>
+                        <!-- Add more item cells as needed -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="popup" id="equipment-popup">
+        <div class="popup-title-bar" id="equipment-popup-title">
+            <span>Equipment</span>
+            <button id="close-equipment-popup">Close</button>
+        </div>
+        <div class="popup-content">
+            <!-- Container for the left column of equipment items -->
+            <div class="equipment-column left">
+                <div class="item-cell">
+                    <img src="{% static character.equipment.helmet.image %} %}" alt="helmet">
+                    <div class="item-info">
+                        <span>Helmet</span>
+                        <span>{{ character.equipment.helmet.id }}</span>
+                    </div>
+                </div>
+                <div class="item-cell">
+                    <img src="{% static character.equipment.bracers.image %} %}" alt="bracers">
+                    <div class="item-info">
+                        <span>bracers</span>
+                        <span>{{ character.equipment.bracers.id }}</span>
+                    </div>
+                </div>
+                <div class="item-cell">
+                    <img src="{% static character.equipment.breastplate.image %} %}" alt="breastplate">
+                    <div class="item-info">
+                        <span>breastplate</span>
+                        <span>{{ character.equipment.breastplate.id }}</span>
+                    </div>
+                </div>
+                <div class="item-cell">
+                    <img src="{% static character.equipment.weapon_right.image %} %}" alt="weapon_right">
+                    <div class="item-info">
+                        <span>{{ character.equipment.weapon_right.stats.name }}</span>
+                    </div>
+                </div>
+                <div class="item-cell">
+                    <img src="{% static character.equipment.boots.image %} %}" alt="boots">
+                    <div class="item-info">
+                        <span>boots</span>
+                        <span>{{ character.equipment.boots.id }}</span>
+                    </div>
+                </div>
+                <!-- Add similar markup for other items in the left column -->
+            </div>
+            
+            <!-- Container for the right column of equipment items -->
+            <div class="equipment-column right">
+                <div class="item-cell">
+                    <img src="{% static character.equipment.shoulders.image %} %}" alt="shoulders">
+                    <div class="item-info">
+                        <span>shoulders</span>
+                        <span>{{ character.equipment.shoulders.id }}</span>
+                    </div>
+                </div>
+                <div class="item-cell">
+                    <img src="{% static character.equipment.leggings.image %} %}" alt="leggings">
+                    <div class="item-info">
+                        <span>leggings</span>
+                        <span>{{ character.equipment.leggings.id }}</span>
+                    </div>
+                </div>
+                <div class="item-cell">
+                    <img src="{% static character.equipment.weapon_left.image %} %}" alt="weapon_left">
+                    <div class="item-info">
+                        <span>weapon_left</span>
+                        <span>{{ character.equipment.weapon_left.id }}</span>
+                    </div>
+                </div>
+                <div class="item-cell">
+                    <img src="{% static character.equipment.chainmail.image %} %}" alt="chainmail">
+                    <div class="item-info">
+                        <span>chainmail</span>
+                        <span>{{ character.equipment.chainmail.id }}</span>
+                    </div>
+                </div>
+                <div class="item-cell">
+                    <img src="{% static character.equipment.ring.image %} %}" alt="ring">
+                    <div class="item-info">
+                        <span>ring</span>
+                        <span>{{ character.equipment.ring.id }}</span>
+                    </div>
+                </div>
+                <div class="item-cell">
+                    <img src="{% static character.equipment.amulet.image %} %}" alt="amulet">
+                    <div class="item-info">
+                        <span>amulet</span>
+                        <span>{{ character.equipment.amulet.id }}</span>
+                    </div>
+                </div>
+                <!-- Add similar markup for other items in the right column -->
+            </div>
+        </div>
+    </div>
+    <div class="popup" id="stats-popup">
+        <div class="popup-title-bar" id="stats-popup-title">
+            <span>Character Stats</span>
+            <button id="close-stats-popup" class="close-equipment-popup">Close</button>
+        </div>
+        <div class="popup-content">
+            <!-- Display character stats here -->
+            <div class="stats">
+                <p>Name: {{ character.name }}</p>
+                <p>Level: {{ character.level }}</p>
+                <p>Health: {{ character.stats.current_health }} / {{ character.stats.current_health }}</p>
+                <p>Strength: {{ character.stats.strength }}</p>
+                <p>Agility: {{ character.stats.agility }}
+                <p>Intelligence: {{ character.stats.intelligence }}
+                <p>Damage: {{ character.stats.damage }}</p>
+                <p>Defence: {{ character.stats.defence }}</p>       
+                <!-- Add more character stats as needed -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("open-chat-button").addEventListener("click", function () {
+            var chatPopup = document.getElementById("chat-popup");
+            chatPopup.style.display = "block";
+            chatPopup.classList.add("ChatOpenAnim")
+        });
+
+        document.getElementById("close-chat-button").addEventListener("click", function () {
+            var chatPopup = document.getElementById("chat-popup");
+            chatPopup.classList.remove("ChatOpenAnim");
+            chatPopup.classList.add("ChatCloseAnim")
+
+            setTimeout(function () {
+                chatPopup.style.display = "none";
+                chatPopup.classList.remove("ChatCloseAnim");
+            }, 1000);
+            
+        });
+    </script>
+    <script>
+        document.getElementById("open-location-button").addEventListener("click", function () {
+            document.getElementById("npc-location-popup").style.display = "block";
+        });
+        
+        document.getElementById("close-location-button").addEventListener("click", function () {
+            document.getElementById("npc-location-popup").style.display = "none";
+        });
+    </script>
+    <script>
+        document.querySelector(".nav-button:first-child").addEventListener("click", function() {
+            document.getElementById("inventory-popup").style.display = "block";
+        });
+
+        document.getElementById("close-inventory-popup").addEventListener("click", function() {
+            document.getElementById("inventory-popup").style.display = "none";
+        });
+    </script>
+    <script>
+        document.getElementById('nav-button2').addEventListener('click', openEquipmentPopup);
+        document.getElementById('close-equipment-popup').addEventListener('click', closeEquipmentPopup);
+
+        function openEquipmentPopup() {
+            document.getElementById('equipment-popup').style.display = 'block';
+        }
+
+        function closeEquipmentPopup() {
+            document.getElementById('equipment-popup').style.display = 'none';
+        }
+    </script>
+    <script>
+        document.getElementById("nav-button3").addEventListener("click", function () {
+            document.getElementById("stats-popup").style.display = "block";
+        });
+        
+        document.getElementById("close-stats-popup").addEventListener("click", function () {
+            document.getElementById("stats-popup").style.display = "none";
+        });
+    </script>
+    <script>
+        function makePopupMovable(popupElement, titleBarElement) {
+            let isDragging = false;
+            let offsetX = 0;
+            let offsetY = 0;
+
+            titleBarElement.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', endDrag);
+
+            function startDrag(e) {
+                isDragging = true;
+                const rect = popupElement.getBoundingClientRect();
+                offsetX = e.clientX - rect.left - rect.width / 2;
+                offsetY = e.clientY - rect.top - rect.height / 2;
+                popupElement.style.cursor = 'grabbing';
+            }
+
+            function drag(e) {
+                if (!isDragging) return;
+                const left = e.clientX - offsetX;
+                const top = e.clientY - offsetY;
+                popupElement.style.left = left + 'px';
+                popupElement.style.top = top + 'px';
+            }
+
+            function endDrag() {
+                isDragging = false;
+                popupElement.style.cursor = 'grab';
+            }
+        }
+
+        // Usage for inventory popup
+        const inventoryPopup = document.getElementById('inventory-popup');
+        const inventoryTitleBar = document.getElementById('inventory-popup-title');
+        makePopupMovable(inventoryPopup, inventoryTitleBar);
+
+        // Usage for other popups (replace these elements with your specific popup and title bar elements)
+        const equipmentPopup = document.getElementById('equipment-popup');
+        const equipmentTitleBar = document.getElementById('equipment-popup-title');
+        makePopupMovable(equipmentPopup, equipmentTitleBar);
+
+        const statsPopup = document.getElementById('stats-popup');
+        const statsTitleBar = document.getElementById('stats-popup-title');
+        makePopupMovable(statsPopup, statsTitleBar);
+    </script>
+</body>
+</html>

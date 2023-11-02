@@ -9,22 +9,20 @@
 <body>
     <h1>Welcome to Your Profile, {{ username }}</h1>
     <!-- Add a form to display the list of user characters -->
-    <form method="post" id="CharacterListForm">
-        {% csrf_token %}
-        <h1>Your Characters</h1>
-        <ul>
-            {% for character in user_characters %}
-            <li>
-                <form method="post">
-                    {% csrf_token %}
-                    <button type="submit">{{ character.character_id.name }}</button>
-                </form>
-            </li>
-            {% empty %}
-            <li>No characters found.</li>
-            {% endfor %}
-        </ul>
-    </form>
+    <h1>Your Characters</h1>
+    <ul>
+        {% for character in user_characters %}
+        <li>
+            <form method="post" id="CharacterStartGame" action="{% url 'initialize_game' %}">
+                {% csrf_token %}
+                <input type="hidden" name="character_id" value="{{ character.character_id.id }}" />
+                <button type="submit">{{ character.character_id.name }}</button>
+            </form>
+        </li>
+        {% empty %}
+        <li>No characters found.</li>
+        {% endfor %}
+    </ul>
 
     <!-- Add a form for character creation -->
         <form method="post" id="CharacterCreationForm" action="{% url 'create_character' %}">

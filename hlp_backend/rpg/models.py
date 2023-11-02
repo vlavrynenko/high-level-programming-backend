@@ -6,6 +6,8 @@ from django.utils import timezone
 class Location(models.Model):
     id = models.AutoField(primary_key=True)
     trigger = models.CharField('location trigger')
+    name = models.CharField('location name', default='location name')
+    image = models.CharField('location image', default='location.png')
     neighbour_locations = models.JSONField()
 
     def __str__(self):
@@ -24,10 +26,11 @@ class Action(models.Model):
 
 class Item(models.Model):
     id = models.AutoField(primary_key=True)
-    type = models.IntegerField()
+    type = models.CharField(default='unequipable')
     trigger = models.CharField('item trigger')
     stats = models.JSONField()
     drop_chance = models.IntegerField()
+    image = models.CharField('item image', default='item.png')
 
     def __str__(self):
         return self.id
@@ -65,7 +68,7 @@ class Equipment(models.Model):
                                     default=0)
     ring = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_rings', default=0)
     amulet = models.ForeignKey(Item, on_delete=models.SET(0), related_name='%(class)s_amulets', default=0)
-    consumables = models.JSONField(default='{}')
+    consumables = models.CharField(null=True)
 
     def __str__(self):
         return self.id
@@ -78,10 +81,10 @@ class Character(models.Model):
     max_health = models.IntegerField()
     level = models.IntegerField()
     stats = models.JSONField()
-    equipment = models.ForeignKey(Equipment, on_delete=models.SET(0))
-    inventory = models.JSONField()
+    equipment = models.ForeignKey(Equipment, on_delete=models.SET(0), null=True)
+    inventory = models.CharField(null=True)
     current_location = models.ForeignKey(Location, on_delete=models.SET(0))
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.id
@@ -90,6 +93,7 @@ class Character(models.Model):
 class Npc(models.Model):
     id = models.AutoField(primary_key=True)
     character_id = models.OneToOneField(Character, on_delete=models.SET(0))
+    enemy = models.BooleanField(default=False)
     trigger = models.CharField('npc trigger')
     drop_multiplier = models.FloatField()
     drop_list = models.JSONField()

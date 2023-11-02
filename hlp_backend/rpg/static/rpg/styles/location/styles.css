@@ -1,0 +1,582 @@
+/* Global styles */
+html, body {
+    overflow: hidden;
+}
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f3f4f6;
+}
+
+/* Header styles */
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 5%;
+}
+
+.character-hp {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+}
+
+.character-hp span {
+    margin-right: 5px;
+}
+
+.logout-button {
+    background-color: #ff5722;
+    display: inline-block;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+/* Navigation bar styles */
+.nav-bar {
+    background-color: #444;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px;
+}
+
+.nav-button {
+    background-color: #555;
+    width: 48px;
+    height: 48px;
+    margin-right: 20px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.nav-button img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.nav-button:last-child {
+    margin-right: 0;
+}
+
+.nav-button:hover {
+    background-color: #333;
+}
+
+/* Main content styles */
+.main-content {
+    display: flex;
+    margin: 20px;
+}
+
+/* Location window styles */
+
+#chat-popup {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%; /* Adjust the height as needed */
+    background-color: #c1ab4c;
+    color: #00000a;
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    z-index: 999;
+    display: none;
+    flex-direction: column; /* Change to column layout */
+    justify-content: space-between; /* Add space between content and input */
+    align-items: flex-start; /* Align input to the left */
+    box-sizing: border-box; /* Include padding in height calculation */
+    padding-bottom: 50px; /* Adjust space for input */
+    box-shadow: 0 -10px 10px rgba(0, 0, 0, 0.1); /* Add shadow to bottom */
+    overflow: hidden; /* Hide overflow */
+}
+
+/* Chat messages box styles */
+.chat-messages {
+    flex-grow: 1;
+    max-height: 70%; /* Limit the height for scrolling */
+    color: #000000;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+/* Text input styles */
+#message-input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 0;
+    background-color: #444;
+    color: #fff;
+    font-size: 16px;
+    position: absolute;
+    bottom: 0; /* Position at the bottom */
+    left: 0;
+    box-sizing: border-box;
+}
+
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Make it full height of the viewport */
+}
+
+.chat-close {
+    position: absolute;
+    top: 5px;
+    right: 5px; /* Adjust the right value to position it as desired */
+    cursor: pointer;
+    color: #fff;
+    font-size: 20px;
+}
+
+.chat-content {
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+input[type="text"] {
+    width: 80%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Styles for the location container */
+.location-container {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 10px;
+    height: 80%;
+    max-height: 80vh; /* Set max height to 50% of the viewport height */
+    /* Add background image URL and properties */
+    background-size: cover; /* Adjust background size as needed */
+    background-repeat: no-repeat;
+}
+
+/* Styles for the "Open Chat" button container */
+#open-chat-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: sticky;
+    bottom: 0;
+    margin-top: -25px;
+    background: rgba(0, 0, 0, 0.0); /* Semi-transparent background color */
+    z-index: 1; /* Ensure it's above other content */
+    height: 50px; /* Adjust the height as needed */
+}
+
+/* Styles for the "Open Chat" button */
+#open-chat-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#open-chat-button:hover {
+    background-color: #0056b3;
+}
+
+#close-chat-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#close-chat-button:hover {
+    background-color: #0056b3;
+}
+
+progress#hp-bar {
+    width: 150px;
+    height: 30px;
+    appearance: none; /* Remove default styles */
+    border: none;
+    background-color: #ddd; /* Background color of the progress bar */
+    border-radius: 5px;
+}
+
+progress#hp-bar::after {
+    content: attr(value) ' / ' attr(max); /* Display the current HP and max HP values */
+    position: absolute;
+    top: 25px;
+    left: 45px;
+    font-size: 18px; /* Adjust font size as needed */
+    color: #000000; /* Text color */
+}
+
+progress#hp-bar::-webkit-progress-bar {
+    background-color: #ddd; /* Background color of the progress bar track */
+    border-radius: 10px;
+}
+
+progress#hp-bar::-webkit-progress-value {
+    background-color: #770000; /* Color of the progress bar fill (green in this example) */
+    border-radius: 5px;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+}
+
+.popup-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.popup-close {
+    background-color: #ff5722;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Styles for the inventory table */
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.inventory-table th, .inventory-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+
+.inventory-table th {
+    background-color: #333;
+    color: #fff;
+    font-weight: bold;
+}
+
+.item-cell {
+    position: relative;
+    text-align: center;
+}
+
+/* CSS for item images */
+.item-image {
+    width: 40px;
+    height: 40px;
+}
+
+/* CSS for item info */
+.item-info {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    display: none;
+    white-space: nowrap;
+}
+
+/* Show item info on hover */
+.item-cell:hover .item-info {
+    display: block;
+}
+
+.popup-title-bar {
+    background-color: #444;
+    color: #fff;
+    padding: 5px;
+    cursor: grab;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+}
+
+#close-inventory-popup {
+    background-color: #ff5722;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#close-inventory-popup:hover {
+    background-color: #e64a19;
+}
+
+#equipment-popup {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 999;
+}
+
+#equipment-popup .popup-title-bar {
+    background-color: #444;
+    color: #fff;
+    padding: 5px;
+    cursor: grab;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+}
+
+#close-equipment-popup {
+    background-color: #ff5722;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#close-equipment-popup:hover {
+    background-color: #e64a19;
+}
+
+#equipment-popup .popup-content {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#equipment-popup .character-image {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+    border: 2px solid #444;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+#equipment-popup .character-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+#equipment-popup .equipment-circle {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.equipment-item {
+    width: 50px;
+    height: 50px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.popup-content {
+    /* Add a flexbox display to arrange items horizontally */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Style for the left column */
+.equipment-column.left {
+    /* Adjust the width of the left column as needed */
+    width: 45%;
+    /* Add any other styles you want for the left column */
+}
+
+/* Style for the right column */
+.equipment-column.right {
+    /* Adjust the width of the right column as needed */
+    width: 45%;
+    /* Add any other styles you want for the right column */
+}
+
+/* Styles for individual items within the columns */
+.item {
+    /* Your existing styles for each item */
+}
+
+/* Style for the character image */
+.character-image {
+    /* Your existing styles for the character image */
+}
+
+@keyframes ChatOpenAnim {
+	0% {
+		animation-timing-function: ease-in;
+		opacity: 0;
+		transform: translateY(250px);
+	}
+
+	38% {
+		animation-timing-function: ease-out;
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	55% {
+		animation-timing-function: ease-in;
+		transform: translateY(65px);
+	}
+
+	72% {
+		animation-timing-function: ease-out;
+		transform: translateY(0);
+	}
+
+	81% {
+		animation-timing-function: ease-in;
+		transform: translateY(28px);
+	}
+
+	90% {
+		animation-timing-function: ease-out;
+		transform: translateY(0);
+	}
+
+	95% {
+		animation-timing-function: ease-in;
+		transform: translateY(8px);
+	}
+
+	100% {
+		animation-timing-function: ease-out;
+		transform: translateY(0);
+	}
+}
+
+@keyframes myAnim {
+	0% {
+		animation-timing-function: ease-in;
+		opacity: 0;
+		transform: translateY(250px);
+	}
+
+	38% {
+		animation-timing-function: ease-out;
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	55% {
+		animation-timing-function: ease-in;
+		transform: translateY(65px);
+	}
+
+	72% {
+		animation-timing-function: ease-out;
+		transform: translateY(0);
+	}
+
+	81% {
+		animation-timing-function: ease-in;
+		transform: translateY(28px);
+	}
+
+	90% {
+		animation-timing-function: ease-out;
+		transform: translateY(0);
+	}
+
+	95% {
+		animation-timing-function: ease-in;
+		transform: translateY(8px);
+	}
+
+	100% {
+		animation-timing-function: ease-out;
+		transform: translateY(0);
+	}
+}
+
+@keyframes ChatCloseAnim {
+	0% {
+		animation-timing-function: ease-in;
+		opacity: 0;
+		transform: translateY(200px);
+	}
+
+	100% {
+		animation-timing-function: ease-out;
+		transform: translateY(0);
+	}
+}
+
+.animated {
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+}
+
+/* Opening animation */
+.chat-popup.slideIn {
+    animation-name: ChatOpenAnim;
+}
+
+/* Closing animation */
+.chat-popup.slideOut {
+    animation-name: ChatCloseAnim;
+}
