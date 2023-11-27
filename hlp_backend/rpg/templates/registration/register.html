@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign up</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'rpg/styles.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'rpg/js/notification.js' %}"></script>
+</head>
+<body>
+    {% block content %}
+    {% include 'registration/notification.html' %}
+    <h1>Sign up</h1>
+
+    <!-- Display error messages -->
+    {% if messages %}
+    <div class="error-message">
+        {% for message in messages %}
+        <script>
+            showNotification("{{ message }}");
+        </script>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+        <button type="submit">Sign up</button>
+    </form>
+    <p>Already have an account? <a href="{% url 'login' %}" class="signup-button">Login</a></p>
+    {% endblock %}
+</body>
+</html>
