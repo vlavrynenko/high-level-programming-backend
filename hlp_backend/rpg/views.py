@@ -231,5 +231,4 @@ def equip(request):
                    'inventory': inventory}
         session_context['inventory'] = inventory
         return render(request, 'registration/location.html', context)
-        
-        
+
